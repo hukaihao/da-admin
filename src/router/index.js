@@ -96,6 +96,27 @@ export const constantRouterMap = [
       }
     ]
   },
+  {
+    path: '/product',
+    component: Layout,
+    redirect: '/product/analysis',
+    name: 'product',
+    meta: { title: '产品管理', icon: 'excel' },
+    children: [
+      {
+        path: 'analysis',
+        name: 'analysis',
+        component: () => import('@/views/product/analysis'),
+        meta: { title: '分析结果', icon: 'download' }
+      },
+      {
+        path: 'analysis',
+        name: 'analysis',
+        component: () => import('@/views/product/analysis'),
+        meta: { title: '基本信息', icon: 'download' }
+      }
+    ]
+  },
 
   { path: '*', redirect: '/404', hidden: true }
 ]
@@ -106,3 +127,77 @@ export default new Router({
   routes: constantRouterMap
 })
 
+export const asyncRouterMap = [
+  { path: '/login', component: () => import('@/views/login/index'), hidden: true },
+  { path: '/404', component: () => import('@/views/404'), hidden: true },
+
+  {
+    path: '',
+    component: Layout,
+    redirect: 'dashboard',
+    name: '首页',
+    // hidden: true,
+    children: [{
+      path: 'dashboard',
+      component: () => import('@/views/dashboard/index'),
+      name: 'dashboard',
+      meta: { title: '首页', icon: 'dashboard', noCache: true }
+    }]
+  },
+  {
+    path: '/input',
+    component: Layout,
+    children: [
+      {
+        path: 'input',
+        name: 'input',
+        component: () => import('@/views/input/index'),
+        meta: { title: '数据录入', icon: 'input' }
+      }
+    ]
+  },
+  {
+    path: '/excel',
+    component: Layout,
+    redirect: '/excel/exportExcel',
+    name: 'excel',
+    meta: { title: '数据处理', icon: 'excel' },
+    children: [
+      {
+        path: 'exportExcel',
+        name: 'exportExcel',
+        component: () => import('@/views/excel/exportExcel'),
+        meta: { title: '全量导出', icon: 'download' }
+      },
+      {
+        path: 'selectExcel',
+        name: 'selectExcel',
+        component: () => import('@/views/excel/selectExcel'),
+        meta: { title: '部分导出', icon: 'download' }
+      },
+      {
+        path: 'uploadExcel',
+        name: 'uploadExcel',
+        component: () => import('@/views/excel/uploadExcel'),
+        meta: { title: '上载', icon: 'upload' }
+      }
+    ]
+  },
+  {
+    path: '/product',
+    component: Layout,
+    redirect: '/product/analysis',
+    name: 'excel',
+    meta: { title: '产品管理', icon: 'excel' },
+    children: [
+      {
+        path: 'analysis',
+        name: 'analysis',
+        component: () => import('@/views/product/analysis'),
+        meta: { title: '全量导出', icon: 'download' }
+      }
+    ]
+  },
+
+  { path: '*', redirect: '/404', hidden: true }
+]

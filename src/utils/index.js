@@ -1,3 +1,6 @@
+/**
+ * Created by jiachenpan on 16/11/18.
+ */
 
 export function parseTime(time, cFormat) {
   if (arguments.length === 0) {
@@ -53,6 +56,7 @@ export function formatTime(time, option) {
     return d.getMonth() + 1 + '月' + d.getDate() + '日' + d.getHours() + '时' + d.getMinutes() + '分'
   }
 }
+
 // 格式化时间
 export function getQueryObject(url) {
   url = url == null ? window.location.href : url
@@ -77,7 +81,7 @@ export function getQueryObject(url) {
 export function getByteLen(val) {
   let len = 0
   for (let i = 0; i < val.length; i++) {
-  // eslint-disable-next-line no-control-regex
+    // eslint-disable-next-line
     if (val[i].match(/[^\x00-\xff]/ig) != null) {
       len += 1
     } else { len += 0.5 }
@@ -100,7 +104,7 @@ export function param(json) {
   return cleanArray(Object.keys(json).map(key => {
     if (json[key] === undefined) return ''
     return encodeURIComponent(key) + '=' +
-      encodeURIComponent(json[key])
+            encodeURIComponent(json[key])
   })).join('&')
 }
 
@@ -128,14 +132,16 @@ export function objectMerge(target, source) {
   if (Array.isArray(source)) {
     return source.slice()
   }
-  Object.keys(source).forEach((property) => {
-    const sourceProperty = source[property]
-    if (typeof sourceProperty === 'object') {
-      target[property] = objectMerge(target[property], sourceProperty)
-    } else {
+  for (const property in source) {
+    if (source.hasOwnProperty(property)) {
+      const sourceProperty = source[property]
+      if (typeof sourceProperty === 'object') {
+        target[property] = objectMerge(target[property], sourceProperty)
+        continue
+      }
       target[property] = sourceProperty
     }
-  })
+  }
   return target
 }
 
@@ -248,17 +254,15 @@ export function deepClone(source) {
     throw new Error('error arguments', 'shallowClone')
   }
   const targetObj = source.constructor === Array ? [] : {}
-  Object.keys(source).forEach((keys) => {
-    if (source[keys] && typeof source[keys] === 'object') {
-      targetObj[keys] = source[keys].constructor === Array ? [] : {}
-      targetObj[keys] = deepClone(source[keys])
-    } else {
-      targetObj[keys] = source[keys]
+  for (const keys in source) {
+    if (source.hasOwnProperty(keys)) {
+      if (source[keys] && typeof source[keys] === 'object') {
+        targetObj[keys] = source[keys].constructor === Array ? [] : {}
+        targetObj[keys] = deepClone(source[keys])
+      } else {
+        targetObj[keys] = source[keys]
+      }
     }
-  })
+  }
   return targetObj
-}
-
-export function uniqueArr(arr) {
-  return Array.from(new Set(arr))
 }

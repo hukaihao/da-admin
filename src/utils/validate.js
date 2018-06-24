@@ -1,8 +1,6 @@
-
-export function isvalidUsername(str) {
-  const valid_map = ['admin', 'editor']
-  return valid_map.indexOf(str.trim()) >= 0
-}
+/**
+ * Created by jiachenpan on 16/11/18.
+ */
 
 /* 合法uri*/
 export function validateURL(textval) {
@@ -26,5 +24,15 @@ export function validateUpperCase(str) {
 export function validatAlphabets(str) {
   const reg = /^[A-Za-z]+$/
   return reg.test(str)
+}
+
+/**
+ * validate email
+ * @param email
+ * @returns {boolean}
+ */
+export function validateEmail(email) {
+  const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+  return re.test(email)
 }
 
