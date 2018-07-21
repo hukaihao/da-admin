@@ -25,8 +25,13 @@ service.interceptors.request.use(config => {
 // respone interceptor
 service.interceptors.response.use(
   response => {
-    const res = response.data
+    if (response.headers && (response.headers['content-type'] === 'application/octet-stream')) {
+      if (response.data.errno === null || response.data.errno === undefined) {
+        return response
+      }
+    }
 
+    const res = response.data
     if (res.errno === 501) {
       MessageBox.alert('系统未登录，请重新登录', '未登录', {
         confirmButtonText: '确定',
@@ -63,5 +68,41 @@ service.interceptors.response.use(
     })
     return Promise.reject(error)
   })
+
+/**
+ * 封装导出Excal文件请求
+ * @param url
+ * @param data
+ * @returns {Promise}
+ */
+export function exportError(url, data) {
+  return new Promise((resolve, reject) => {
+    alert(data.fileName)
+    axios({
+      method: 'get',
+      url: 'http://localhost:8888/admin/upload/downloaderror', // 请求地址
+      data: { fileName: 'cqsscError' }, // 参数
+      responseType: 'blob' // 表明返回服务器返回的数据类型
+    }).then(response => {
+      const blob = new Blob([response.data], { type: 'application/octet-stream' })
+      alert(blob)
+      const fileName = data.fileName + '.txt'
+      if (window.navigator.msSaveOrOpenBlob) {
+        alert('1231')
+        navigator.msSaveBlob(blob, fileName)
+      } else {
+        alert('67890')
+        var link = document.createElement('a')
+        link.href = window.URL.createObjectURL(blob)
+        link.download = fileName
+        link.click()
+        window.URL.revokeObjectURL(link.href)
+      }
+    }, err => {
+      console.log(err)
+      reject(err)
+    })
+  })
+}
 
 export default service

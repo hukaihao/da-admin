@@ -22,7 +22,7 @@
       <el-table-column align="center" width="150px" label="产品代码" prop="productCode" sortable>
       </el-table-column>
 
-      <el-table-column align="center" min-width="100px" label="开奖期数" prop="lotteryPeriod">
+      <el-table-column align="center" min-width="100px" label="开奖期数" prop="lotteryPeriod" sortable>
       </el-table-column>
 
       <el-table-column align="center" min-width="150px" label="开奖日期" prop="lotteryDate" :formatter="formatterDate">
@@ -124,13 +124,20 @@
     data() {
       return {
         list: null,
+        excelList: null,
         total: null,
         listLoading: true,
         listQuery: {
           page: 1,
           limit: 10,
           productCode: undefined,
-          sort: '+id'
+          sort: '+lotteryPeriod'
+        },
+        listExcelQuery: {
+          page: 1,
+          limit: 20000,
+          productCode: undefined,
+          sort: '+lotteryPeriod'
         },
         dataForm: {
           idEveryColorData: undefined,
@@ -269,11 +276,20 @@
       },
       handleDownload() {
         this.downloadLoading = true
+        this.getExcelList()
         import('@/vendor/Export2Excel').then(excel => {
           const tHeader = ['产品代码', '万位', '千位', '百位', '十位', '个位', '大小', '龙虎和', '奇偶']
           const filterVal = ['productCode', 'wanDigit', 'qianDigit', 'baiDigit', 'shiDigit', 'geDigit', 'bigDeal', 'vingtEtun', 'parity']
-          excel.export_json_to_excel2(tHeader, this.list, filterVal, '历史产品信息导出')
+          excel.export_json_to_excel2(tHeader, this.excelList, filterVal, '六合彩分析结果导出')
           this.downloadLoading = false
+        })
+      },
+      getExcelList() {
+        this.listExcelQuery.productCode = this.listQuery.productCode
+        listAnalysisResult(this.listExcelQuery).then(response => {
+          this.excelList = response.data.data.items
+        }).catch(() => {
+          this.excelList = []
         })
       },
       formatterBigDeal(row) {

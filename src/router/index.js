@@ -110,10 +110,16 @@ export const constantRouterMap = [
         meta: { title: '分析结果', icon: 'download' }
       },
       {
-        path: 'analysis',
-        name: 'analysis',
-        component: () => import('@/views/product/analysis'),
-        meta: { title: '基本信息', icon: 'download' }
+        path: 'upload',
+        name: 'upload',
+        component: () => import('@/views/product/upload'),
+        meta: { title: '上载', icon: 'upload' }
+      },
+      {
+        path: 'download',
+        name: 'download',
+        component: () => import('@/views/product/download'),
+        meta: { title: '下载', icon: 'download' }
       }
     ]
   },
